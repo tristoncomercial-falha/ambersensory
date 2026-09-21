@@ -100,9 +100,14 @@ function setKey(k){ try{ sessionStorage.setItem("amber_key", k); }catch(_){} }
 
 async function load(key){
   if(!SCRIPT_URL) throw new Error("Configure a SCRIPT_URL no admin.html.");
-  const r = await fetch(SCRIPT_URL + "?key=" + encodeURIComponent(key) + "&t=" + Date.now());
-  const j = await r.json();
-  if(!j.ok) throw new Error(j.error === "senha incorreta" ? "Senha incorreta." : (j.error || "Falha ao carregar."));
+  let j;
+  try{
+    const r = await fetch(SCRIPT_URL + "?key=" + encodeURIComponent(key) + "&t=" + Date.now());
+    j = await r.json();
+  }catch(_){
+    throw new Error("Não consegui falar com o servidor. Abra o painel pelo link do site publicado (ex.: seusite/admin.html), não pela pré-visualização do arquivo.");
+  }
+  if(!j.ok) throw new Error(j.error === "senha incorreta" ? "Senha incorreta. Confira se digitou exatamente: letras minúsculas e hífens." : (j.error || "Falha ao carregar."));
   lista = j.lista.sort((a,b) => a.ts - b.ts);
   $("#total").textContent = lista.length;
   $("#upd").textContent = "Atualizado às " + new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
@@ -131,7 +136,7 @@ function render(){
 
 $("#login").addEventListener("submit", async e => {
   e.preventDefault();
-  const k = $("#key").value.trim();
+  const k = $("#key").value.replace(/\s+/g,"").toLowerCase();
   $("#loginerr").textContent = "";
   try{ await load(k); setKey(k); $("#login").hidden = true; $("#panel").hidden = false; }
   catch(err){ $("#loginerr").textContent = err.message; }

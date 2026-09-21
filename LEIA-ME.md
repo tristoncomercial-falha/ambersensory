@@ -1,4 +1,20 @@
-# AMBER at GEMMA: colocar no ar (uns 10 minutos)
+# AMBER at GEMMA: já está configurado
+
+O backend já está publicado e ligado ao site e ao painel. Falta só subir os arquivos.
+
+- **Conta Google:** tristoncomercial@gmail.com
+- **Planilha:** "AMBER — Inscritos": https://docs.google.com/spreadsheets/d/106K5kjCDPTQlsbvHY6PSrSssqahvjYbLS9nnqwAFHfE/edit
+- **Script:** "AMBER — Lista (backend)", em script.google.com
+- **Senha do painel:** amber-gema-ybej4m (para trocar, edite a SENHA no script e publique uma nova versão)
+
+## Publicar
+Suba `index.html`, `admin.html` e `musica.mp3` no GitHub Pages.
+- Site: `seudominio/`
+- Painel e PDF: `seudominio/admin.html`
+
+---
+
+## Referência: como foi montado (só se precisar refazer)
 
 Arquivos:
 - `index.html`: o site da festa com o formulário
