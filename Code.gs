@@ -8,11 +8,12 @@
  * 3) Copie a URL que termina em /exec e cole no index.html e no admin.html.
  */
 
-const SENHA = "troque-esta-senha";   // senha do painel admin
+const SENHA = "amber-gema-ybej4m";   // senha do painel admin
+const PLANILHA_ID = "106K5kjCDPTQlsbvHY6PSrSssqahvjYbLS9nnqwAFHfE"; // planilha AMBER — Inscritos
 const ABA   = "Inscritos";
 
 function sheet_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = SpreadsheetApp.openById(PLANILHA_ID);
   let sh = ss.getSheetByName(ABA);
   if (!sh) {
     sh = ss.insertSheet(ABA);
@@ -27,6 +28,17 @@ function sheet_() {
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/** Rode uma vez no editor: autoriza o script e prepara a planilha */
+function configurar() {
+  const ss = SpreadsheetApp.openById(PLANILHA_ID);
+  ss.rename("AMBER — Inscritos");
+  ss.setSpreadsheetTimeZone("America/Fortaleza");
+  const sh = sheet_();
+  ss.getSheets().forEach(s => { if (s.getName() !== ABA) ss.deleteSheet(s); });
+  ss.setActiveSheet(sh);
+  Logger.log("Pronto: " + ss.getUrl());
 }
 
 /** Recebe a inscrição do site */
@@ -69,7 +81,7 @@ function doGet(e) {
 
   const sh = sheet_();
   const last = sh.getLastRow();
-  const tz = Session.getScriptTimeZone();
+  const tz = "America/Fortaleza";
   const rows = last > 1 ? sh.getRange(2, 1, last - 1, 4).getValues() : [];
   const lista = rows.map(r => ({
     data: r[0] instanceof Date ? Utilities.formatDate(r[0], tz, "dd/MM HH:mm") : String(r[0]),
