@@ -490,8 +490,7 @@ $("#form").addEventListener("submit", async (e) => {
       });
       res = await r.json();
     } else {
-      console.warn("[AMBER] SCRIPT_URL vazio — modo demonstração, nada foi salvo.");
-      await new Promise(r => setTimeout(r, 600));
+      throw new Error("sem SCRIPT_URL");
     }
     if(!res.ok) throw new Error(res.error || "Falha");
     const first = data.nome.split(" ")[0];
@@ -499,7 +498,9 @@ $("#form").addEventListener("submit", async (e) => {
     $("#form").hidden = true; $("#done").hidden = false;
     $("#done").scrollIntoView({behavior:"smooth", block:"center"});
   }catch(err){
-    ferr.textContent = "Não conseguimos enviar agora. Verifique sua conexão e tente de novo.";
+    ferr.textContent = CONFIG.SCRIPT_URL
+      ? "Não conseguimos enviar agora. Verifique sua conexão e tente de novo."
+      : "Formulário ainda não configurado (SCRIPT_URL vazio).";
     ferr.hidden = false;
   }finally{
     btn.disabled = false; btn.textContent = "Confirmar presença";
